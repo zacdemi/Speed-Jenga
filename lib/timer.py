@@ -4,7 +4,7 @@ import sounds
 class Timer():
     """ standard timer """    
 
-    def __init__(self,seconds):
+    def __init__(self, seconds):
          self._seconds = seconds
          self.active = False
          self.sound = True

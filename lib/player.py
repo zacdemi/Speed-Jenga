@@ -4,7 +4,7 @@ from .config import PAUSE_BLOCKS, BONUS_SECONDS
 
 class Player():
 
-    def __init__(self,player_id,name,seconds):
+    def __init__(self, player_id, name, seconds):
         self.player_id = player_id 
         self.name = name
         self.timer = Timer(seconds)

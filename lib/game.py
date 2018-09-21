@@ -32,7 +32,7 @@ class Game(object):
 
         for name in self.player_names:
            player_id = self.player_names.index(name)
-           self.player_objects[player_id] = Player(player_id,name,player_seconds)
+           self.player_objects[player_id] = Player(player_id, name, player_seconds)
  
         return self.player_objects
 
@@ -58,7 +58,7 @@ class Game(object):
 
     def _next_player_index(self):
         """ return the value of the next player index"""
-        return self._next_highest_integer(self._active_player_ids(),self.player_index)
+        return self._next_highest_integer(self._active_player_ids(), self.player_index)
 
     def round_complete(self):
         """ return True if the player index is the last player in a round """
@@ -66,7 +66,7 @@ class Game(object):
 
     def award_fastest_move(self):
         """ increment player fastest move count """
-        player_id = self._fastest_turn()[0]
+        player_id, = self._fastest_turn()
         self.player_objects[player_id].fastest_move_count += 1
 
     def _fastest_turn(self):
@@ -75,7 +75,7 @@ class Game(object):
         """
         rnd = self.data[self.round_index]
         turn = [ 
-                   (p['player_id'],p['turn_time'],p['name']) 
+                   (p['player_id'], p['turn_time'], p['name']) 
                    for p in rnd 
                    if not p['out_of_game']
         ]
@@ -87,12 +87,12 @@ class Game(object):
         rnd = []
   
         for k,v in self.player_objects.items():
-            player = {'time_remaining':v.timer.get_seconds(),
-                      'turn_time':v.turn_time(),
-                      'out_of_game':v.out_of_game,
-                      'name':v.name,
-                      'player_id':v.player_id,
-                      'turns':v.turn_index}
+            player = {'time_remaining': v.timer.get_seconds(),
+                      'turn_time': v.turn_time(),
+                      'out_of_game': v.out_of_game,
+                      'name': v.name,
+                      'player_id': v.player_id,
+                      'turns': v.turn_index}
 
             rnd.append(player)
         self.data[self.round_index] = rnd
@@ -150,11 +150,11 @@ class Game(object):
         rnd.sort(key=lambda x: x['out_of_game'])
         rnd.sort(key=lambda x: x['turns'],reverse=True)
 
-        header = "\n {: <10} | {: <10} | {}\n".format("name","time","out of game")
+        header = "\n {: <10} | {: <10} | {}\n".format("name", "time", "out of game")
         standings = header
 
         for p in rnd:
-            standings += "\n {: <10} | {: <10} | {}".format(p['name'],p['time_remaining'],p['out_of_game'])
+            standings += "\n {: <10} | {: <10} | {}".format(p['name'], p['time_remaining'], p['out_of_game'])
   
         return standings + "\n"
 
@@ -178,7 +178,7 @@ class Game(object):
         """
         return " total moves: {} \n".format(self.moves)
  
-    def _player_data_by_round(self,field):
+    def _player_data_by_round(self, field):
         """ 
         return a dict of players and their times
        
@@ -213,17 +213,17 @@ class Game(object):
         """
 
         x = self.data.keys() #rounds
-        fig, (ax1, ax2) = plt.subplots(nrows=2,ncols=1)
+        fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1)
 
         for name,times in self._player_data_by_round('time_remaining').items():
-            ax1.plot(x,times,label=name)
-        ax1.set_title('Time Remaining by Round',fontsize=12)
+            ax1.plot(x, times, label=name)
+        ax1.set_title('Time Remaining by Round', fontsize=12)
         ax1.set_ylabel('Time Remaining')
         ax1.legend()
         
         for name,times in self._player_data_by_round('turn_time').items():
-            ax2.scatter(x,times,label=name)
-        ax2.set_title('Fastest Moves by Round',fontsize=12)
+            ax2.scatter(x, times, label=name)
+        ax2.set_title('Fastest Moves by Round', fontsize=12)
         ax2.set_ylabel('Seconds')
         ax2.legend()
 
@@ -241,15 +241,15 @@ class Game(object):
 
     @classmethod
     def two_player(cls):
-        return cls(['Player1','Player2'])
+        return cls(['Player1', 'Player2'])
  
     @classmethod
     def three_player(cls):
-        return cls(['Player1','Player2','Player3'])
+        return cls(['Player1', 'Player2', 'Player3'])
  
     @classmethod
     def four_player(cls):
-        return cls(['Player1','Player2','Player3','Player4'])
+        return cls(['Player1', 'Player2', 'Player3', 'Player4'])
  
     @staticmethod
     def _next_highest_integer(list_of_integers,n):
