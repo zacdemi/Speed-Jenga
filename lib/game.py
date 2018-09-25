@@ -66,7 +66,7 @@ class Game(object):
 
     def award_fastest_move(self):
         """ increment player fastest move count """
-        player_id, = self._fastest_turn()
+        player_id = self._fastest_turn()[0]
         self.player_objects[player_id].fastest_move_count += 1
 
     def _fastest_turn(self):

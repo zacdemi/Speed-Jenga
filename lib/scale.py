@@ -9,25 +9,20 @@ import os
 class ScaleThread(object):
     def __init__(self):
         #establish serial connection
-        self.ser = serial.Serial()
-        self.ser.port = SERIAL_PORT[0]
-
-        self.ser.baudrate = 115200
-        self.ser.open()
         self.alive = True
 
         #to receive direct serial data
         self.buffer = ''
   
     def start(self):
-        while self.alive:
-            data = self.ser.read(self.ser.inWaiting())
-            if data:
-                self.buffer +=  data.decode('utf-8')
+        with serial.Serial(SERIAL_PORT[0],115200) as self.ser:
+            while self.alive:
+                data = self.ser.read(self.ser.inWaiting())
+                if data:
+                    self.buffer +=  data.decode('utf-8')
 
     def stop(self):
         self.alive = False
-        self.ser.close()
 
 class Scale(ScaleThread):
     def __init__(self):
@@ -36,7 +31,7 @@ class Scale(ScaleThread):
         self.total_blocks = TOTAL_BLOCKS #51
         self.block_variance = BLOCK_VARIANCE # % change from the mean
         self.current_status = "on"
-        self.std_trigger = .0004
+        self.std_trigger = .00045
 
         #start serial parser thread
         self.t1 = threading.Thread(None,self.start)
@@ -69,11 +64,11 @@ class Scale(ScaleThread):
         input("remove all items from the scale and press enter...")
         print ("taring scale")
         self.ser.write(b'x')
-        time.sleep(2)
+        time.sleep(1)
         self.ser.write(b'1')
-        time.sleep(2)
+        time.sleep(1)
         self.ser.write(b'x')
-        time.sleep(2)
+        time.sleep(1)
         self.ser.reset_input_buffer()
 
     def current_weight(self):
