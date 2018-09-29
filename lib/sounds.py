@@ -32,6 +32,10 @@ class Sounds():
         soundfile = 'sounds/263123__pan14__sine-tri-tone-down-negative-beep-amb-verb.ogg' 
         self.play(soundfile)
 
+    def warning(self):
+        soundfile = 'sounds/341278__anthonychartier2020__beep.ogg'
+        self.play(soundfile)
+
     def game_over(self):
         soundfile = '' 
         self.play(soundfile)

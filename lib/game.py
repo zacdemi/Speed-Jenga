@@ -163,12 +163,11 @@ class Game(object):
         display player with the fastest move:
         ' fastest move: Zac | 1.34'
         """
-        _,turn_time,name = self._fastest_turn()
-
-        fastest =  "\n fastest move: {} | {}\n".format(name,turn_time)
         if self.round_index == 0:
             return ""
         else:
+            _,turn_time,name = self._fastest_turn()
+            fastest =  "\n fastest move: {} | {}\n".format(name,turn_time)
             return fastest  
 
     def _str_moves(self):
