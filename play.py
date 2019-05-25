@@ -40,6 +40,8 @@ def main():
             game.current_player().start_turn()
             sound.start_turn()
      
+            
+            print (game.scoreboard())
             while (scale.on() or scale.paused()) and not game.current_player().out_of_time():
                 print (game.current_player().status(), end="\r")
          
@@ -84,9 +86,9 @@ def main():
                 print ("waiting for tower to be restored...")
                 print ("next player: {name}".format(name=game.next_player_name()))
 
-                while not scale.on():
+                while scale.off() or scale.disqualified():
                     #pass
-                    print (scale.status(), scale.current_weight(), end="\r")
+                    print (scale.status(), end="\r")
 
                 s = game.stability_seconds()            
                 print ("tower must stay stable for {} second(s)...".format(s))
@@ -103,9 +105,9 @@ def main():
 
             if game.round_complete():
                 game.end_round()
-                sound.end_of_round()
-                print (game.scoreboard())
-                input("Press enter to begin the next round") + "\n"
+                #sound.end_of_round()
+                #print (game.scoreboard())
+                #input("Press enter to begin the next round") + "\n"
                 print ("next player: {name}".format(name=game.next_player_name()))
               
             game.move_to_next_player()
