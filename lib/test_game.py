@@ -121,7 +121,7 @@ class TestGame(unittest.TestCase):
         self.game_4.round_index = 1
         self.assertEqual(self.game_4._fastest_turn(),(3,1,'Player4'))
 
-    def test_player_data_by_round(self):
+    def test_player_data_by_round_time_remaining(self):
         result =   {
                       'Player1':[6,8],
                       'Player2':[9,7],

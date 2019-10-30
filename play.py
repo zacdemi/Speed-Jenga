@@ -78,6 +78,7 @@ def main():
 
             #display game info
             print (game.current_player().status())
+            print (game.scoreboard())
 
             if scale.on():
                 input("Press enter to start next turn")
@@ -119,6 +120,7 @@ def main():
         clear_screen()
         print ("GAME OVER\n")
         print (game.scoreboard())
+        print (game.data)
         game.graph()
        
         while True: 

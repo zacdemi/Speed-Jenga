@@ -1,8 +1,11 @@
-from .player import Player
-from .config import TOTAL_GAME_SECONDS, BONUS_SECONDS
-from matplotlib import pyplot as plt
 import time
 import os
+import numpy as np
+
+from matplotlib import pyplot as plt
+from .player import Player
+from .config import TOTAL_GAME_SECONDS, BONUS_SECONDS
+
 
 class Game(object):
   
@@ -211,17 +214,17 @@ class Game(object):
         graph subplot of player times and fastest move count
         """
 
-        x = self.data.keys() #rounds
+        rounds = list(self.data.keys())
         fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1)
 
         for name,times in self._player_data_by_round('time_remaining').items():
-            ax1.plot(x, times, label=name)
+            ax1.plot(rounds, times, label=name)
         ax1.set_title('Time Remaining by Round', fontsize=12)
         ax1.set_ylabel('Time Remaining')
         ax1.legend()
         
         for name,times in self._player_data_by_round('turn_time').items():
-            ax2.scatter(x, times, label=name)
+            ax2.scatter(rounds, times, label=name)
         ax2.set_title('Fastest Moves by Round', fontsize=12)
         ax2.set_ylabel('Seconds')
         ax2.legend()
