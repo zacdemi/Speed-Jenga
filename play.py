@@ -11,7 +11,7 @@ def player_names(n):
     """ prompt the users for a list of player names """
     player_names = []
     for p in range(n):
-        name = input("Who is player %s? " % (p + 1))
+        name = input(f"Who is player {p + 1}? ")
         player_names.append(name)
     return player_names
 
@@ -41,7 +41,6 @@ def main():
             sound.start_turn()
      
             
-            print (game.scoreboard())
             while (scale.on() or scale.paused()) and not game.current_player().out_of_time():
                 print (game.current_player().status(), end="\r")
          
@@ -76,23 +75,27 @@ def main():
                     game.current_player().knock_over_tower = True
                 break 
 
+            #check if end of round
+            if game.round_complete():
+                game.end_round()
+
             #display game info
+            if game.round_complete():
+                print (game.scoreboard())
             print (game.current_player().status())
-            print (game.scoreboard())
+            print (f"next player: {game.next_player_name()}")
 
             if scale.on():
                 input("Press enter to start next turn")
-                print ("next player: {name}".format(name=game.next_player_name()))
             else:
                 print ("waiting for tower to be restored...")
-                print ("next player: {name}".format(name=game.next_player_name()))
 
                 while scale.off() or scale.disqualified():
                     #pass
                     print (scale.status(), end="\r")
 
                 s = game.stability_seconds()            
-                print ("tower must stay stable for {} second(s)...".format(s))
+                print (f"tower must stay stable for {s} second(s)...")
                 time.sleep(s)
 
                 if scale.collapsed():
@@ -104,13 +107,6 @@ def main():
                     game.moves += 1
                     clear_screen()
 
-            if game.round_complete():
-                game.end_round()
-                #sound.end_of_round()
-                #print (game.scoreboard())
-                #input("Press enter to begin the next round") + "\n"
-                print ("next player: {name}".format(name=game.next_player_name()))
-              
             game.move_to_next_player()
             clear_screen()
 
