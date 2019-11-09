@@ -15,7 +15,7 @@ class ScaleThread(object):
         self.buffer = ''
   
     def start(self):
-        with serial.Serial(SERIAL_PORT[0],115200) as self.ser:
+        with serial.Serial(SERIAL_PORT,115200) as self.ser:
             while self.alive:
                 data = self.ser.read(self.ser.inWaiting())
                 if data:
@@ -61,7 +61,7 @@ class Scale(ScaleThread):
 
     def tare(self):
         #tare scale
-        input("remove all items from the scale and press enter...")
+        input("remove all items from the scale and press enter when chip flashes blue...")
         print ("taring scale")
         self.ser.write(b'x')
         time.sleep(1)

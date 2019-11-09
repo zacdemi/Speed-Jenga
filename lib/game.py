@@ -51,6 +51,10 @@ class Game(object):
         """ return the name of the next player """
         return self.player_objects[self._next_player_index()].name
 
+    def next_player_current_time(self):
+        """ return the time of the next player """
+        return self.player_objects[self._next_player_index()].current_time()
+
     def _active_player_ids(self):
         """ return a list of active player ids """
         return [k for k,v in self.player_objects.items() if not v.out_of_game]
@@ -74,16 +78,10 @@ class Game(object):
 
     def _fastest_turn(self):
         """ 
-        return (player_id, turn_time, name) for player with fastest turn
+        return (player_id, turn_time) for player with fastest turn
         """
-        rnd = self.data[self.round_index]
-        turn = [ 
-                   (p['player_id'], p['turn_time'], p['name']) 
-                   for p in rnd 
-                   if not p['out_of_game']
-        ]
-        turn = min(turn, key=lambda x: x[1])
-        return turn 
+        list_of_times =  [(k,v.turn_time()) for k,v in self.player_objects.items() if not v.out_of_game]
+        return  min(list_of_times, key=lambda x: x[1])
 
     def save_round(self):
         """ add player data to data.round_index """
@@ -95,7 +93,9 @@ class Game(object):
                       'out_of_game': v.out_of_game,
                       'name': v.name,
                       'player_id': v.player_id,
-                      'turns': v.turn_index}
+                      'turns': v.turn_index,
+                      'fastest_move_count': v.fastest_move_count,
+                      'pause_block_count': v.pause_blocks}
 
             rnd.append(player)
         self.data[self.round_index] = rnd
@@ -119,9 +119,9 @@ class Game(object):
             return 3
 
     def end_round(self):
+        self.award_fastest_move()
         self.round_index += 1
         self.save_round()
-        self.award_fastest_move()
 
     def end_game(self):
         if self.round_complete():
@@ -131,7 +131,8 @@ class Game(object):
 
     def scoreboard(self): #GUI
         """ combine _str elements into scoreboard """
-        return self._str_round() + self._str_standings() + self._str_fastest_move() + self._str_moves()
+        bottom_border = "-------------------------------------------------------\n"
+        return self._str_round() + self._str_standings() + self._str_moves() + bottom_border
 
     def _str_round(self): #GUI
         """ return a string representation of the current round
@@ -142,36 +143,24 @@ class Game(object):
     def _str_standings(self): #GUI
         """
         Return a string representation of the standings
-        '  Player3  | 7  | False
-           Player1  | 6  | False
-           Player2  | 2  | False '
+        '  name     | time | turns |    out of game | fastest moves | 
+           Player3  | 7    |  1    |    False       |
+           Player1  | 6    |  2    |    False       |
+           Player2  | 2    |  2    |    False       |
         """
 
         #sort players in round
-        rnd = self.data[self.round_index]
+        rnd = self.data[self.round_index]  
         rnd.sort(key=lambda x: x['time_remaining'],reverse=True)
         rnd.sort(key=lambda x: x['out_of_game'])
-        rnd.sort(key=lambda x: x['turns'],reverse=True)
 
-        header = "\n {: <10} | {: <10} | {}\n".format("name", "time", "out of game")
+        header = "\n {: <11} | {: <11} | {: <11} | {}\n".format("name", "time", "out of game","fastest moves")
         standings = header
 
         for p in rnd:
-            standings += "\n {: <10} | {: <10} | {}".format(p['name'], p['time_remaining'], p['out_of_game'])
+            standings += "\n {: <11} | {: <11} | {: <11} | {}".format(p['name'], p['time_remaining'], p['out_of_game'], p['fastest_move_count'])
   
         return standings + "\n"
-
-    def _str_fastest_move(self): #GUI
-        """ 
-        display player with the fastest move:
-        ' fastest move: Zac | 1.34'
-        """
-        if self.round_index == 0:
-            return ""
-        else:
-            _,turn_time,name = self._fastest_turn()
-            fastest =  "\n fastest move: {} | {}\n".format(name,turn_time)
-            return fastest  
 
     def _str_moves(self):
         """ 
@@ -197,25 +186,13 @@ class Game(object):
             result[self.player_names[p]] = data
         return result 
 
-    def _player_fastest_move_count(self):
-        """ 
-        return a dict of players and their fastest move count 
-        
-        {'Player1':4,'Player2':5,'Player3':7}
-        """
-        players = {
-            v.name:v.fastest_move_count
-            for k,v in self.player_objects.items()
-        } 
-        return players 
-
     def graph(self):
         """ 
         graph subplot of player times and fastest move count
         """
 
         rounds = list(self.data.keys())
-        fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1)
+        fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, figsize=(12, 7))
 
         for name,times in self._player_data_by_round('time_remaining').items():
             ax1.plot(rounds, times, label=name)
@@ -229,18 +206,10 @@ class Game(object):
         ax2.set_ylabel('Seconds')
         ax2.legend()
 
-        data = self._player_fastest_move_count()
-        names = list(data.keys())
-        count_of_fastest_moves = list(data.values())
-
-       #ax3.bar(names,count_of_fastest_moves)
-       #ax3.set_title('Count of Fastest Moves')
-       #ax3.set_ylabel('Fastest Moves')
-
         fig.suptitle('Game Stats')
         fig.tight_layout()
         plt.show()
-
+        
     @classmethod
     def two_player(cls):
         return cls(['Player1', 'Player2'])

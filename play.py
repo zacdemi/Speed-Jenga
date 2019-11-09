@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 from lib.game import Game
 from lib.scale import Scale
+from lib.config import TEST_MODE
 from lib.term_controls import clear_screen
 from lib.sounds import Sounds
 import threading
 import json
 import time
+import pprint
 
 def player_names(n):
     """ prompt the users for a list of player names """
@@ -22,8 +24,11 @@ def main():
     sound = Sounds()
 
     #setup players
-    number_of_players = int(input('How many players? '))
-    players = player_names(number_of_players)
+    if TEST_MODE:
+        players = ["Tuna","Trout","QV","Clover"]
+    else:
+        number_of_players = int(input('How many players? '))
+        players = player_names(number_of_players)
 
     while True:
         
@@ -33,13 +38,12 @@ def main():
         clear_screen()
         input("Press enter to start the game")
         clear_screen()
-         
-
+        
         while True:
            
             game.current_player().start_turn()
             sound.start_turn()
-     
+            print (game.scoreboard())
             
             while (scale.on() or scale.paused()) and not game.current_player().out_of_time():
                 print (game.current_player().status(), end="\r")
@@ -49,6 +53,7 @@ def main():
                     sound.pause_turn()
 
                     clear_screen()
+                    print (game.scoreboard())
                     print (game.current_player().status())
 
                     while scale.paused():
@@ -80,19 +85,19 @@ def main():
                 game.end_round()
 
             #display game info
-            if game.round_complete():
-                print (game.scoreboard())
+            print (game.scoreboard())
             print (game.current_player().status())
-            print (f"next player: {game.next_player_name()}")
+            print (f"next player: {game.next_player_name()} ({game.next_player_current_time()})")
 
+            #prompt user for next turn
             if scale.on():
                 input("Press enter to start next turn")
             else:
                 print ("waiting for tower to be restored...")
 
                 while scale.off() or scale.disqualified():
-                    #pass
-                    print (scale.status(), end="\r")
+                    pass
+                    #print (scale.status(), end="\r")
 
                 s = game.stability_seconds()            
                 print (f"tower must stay stable for {s} second(s)...")
@@ -105,7 +110,6 @@ def main():
                 else:
                     print ("success!")
                     game.moves += 1
-                    clear_screen()
 
             game.move_to_next_player()
             clear_screen()
@@ -116,7 +120,7 @@ def main():
         clear_screen()
         print ("GAME OVER\n")
         print (game.scoreboard())
-        print (game.data)
+        #pprint.pprint(game.data,indent=4)
         game.graph()
        
         while True: 
@@ -128,6 +132,7 @@ def main():
 
         if answer in ['n','N','no','No']: 
             break
+        print("Thanks for playing!")
          
          
         #print json.dumps(game.data, indent=4)

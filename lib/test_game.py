@@ -94,32 +94,12 @@ class TestGame(unittest.TestCase):
         self.game_4.finalize_last_round_of_game()
         self.assertTrue(self.game_4.data[self.game_4.round_index][0]['out_of_game'])
 
-    def test_fastest_turn(self):
-        self.game_4.round_index = 1
-        fastest = (3,1,'Player4')
-        self.assertEqual(self.game_4._fastest_turn(),fastest)
-
     def test_str_round(self):
         r  = "\n ROUND 0\n"
         self.assertEqual(self.game_4._str_round(),r)
 
-    def test_str_standings(self):
-        self.game_4.round_index = 2
-        standings = "\n name       | time       | out of game\n\n Player1    | 8          | False\n Player2    | 7          | False\n Player3    | 6          | False\n Player4    | 6          | True\n"
-        print (json.dumps(self.game_4.data, indent=4))
-        self.assertEqual(self.game_4._str_standings(),standings)
- 
-    def test_str_fastest_move(self):
-        self.game_4.round_index = 2
-        fastest = '\n fastest move: Player2 | 1\n'
-        self.assertEqual(self.game_4._str_fastest_move(),fastest)
-
     def test_str_moves(self):
         pass
- 
-    def test_fastest_turn(self):
-        self.game_4.round_index = 1
-        self.assertEqual(self.game_4._fastest_turn(),(3,1,'Player4'))
 
     def test_player_data_by_round_time_remaining(self):
         result =   {
@@ -129,20 +109,6 @@ class TestGame(unittest.TestCase):
                       'Player4':[7,6]
         }
         self.assertEqual(self.game_4._player_data_by_round('time_remaining'),result)
-
-    def test_player_fastest_move_count(self): 
-
-        #set all player fastest move count to their player id
-        for k,v in self.game_4.player_objects.items():
-            v.fastest_move_count = v.player_id
-
-        result = {
-                     'Player1':0,
-                     'Player2':1,
-                     'Player3':2,
-                     'Player4':3
-        }
-        self.assertEqual(self.game_4._player_fastest_move_count(),result)
  
     def test_graph(self):
         for k,v in self.game_4.player_objects.items():
