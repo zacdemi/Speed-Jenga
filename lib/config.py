@@ -3,6 +3,7 @@ BONUS_SECONDS = 3
 TOTAL_BLOCKS = 51
 BLOCK_VARIANCE = .30 # % difference of block weight from the mean +/-
 PAUSE_BLOCKS = 1
-SERIAL_PORT = ['/dev/tty.usbserial-DN03EN9E','/dev/tty.usbserial-DN04B8IS']
+SERIAL_PORT = '/dev/tty.usbserial-DN03EN9E'
+TEST_MODE = True
 
 

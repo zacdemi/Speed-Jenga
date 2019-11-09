@@ -25,6 +25,10 @@ class Player():
         """ pause player timer, subtract pause block """
         self.timer.pause()
         self.pause_blocks -= 1
+
+    def current_time(self):
+        """ return player's current time """
+        return self.timer.get_seconds()
         
     def end_turn(self):
         """ pause player timer, add bonus seconds """
@@ -52,7 +56,7 @@ class Player():
         return self.pause_blocks < 1 
 
     def turn_time(self):
-        """ return turn time except when no turns have been taken """
+        """ return last turn time except when no turns have been taken """
         if self.turn_index == 0 or self.out_of_game:
             return None
         else:
