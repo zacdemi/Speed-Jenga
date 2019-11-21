@@ -37,6 +37,8 @@ def main():
         countdown = False
 
         clear_screen()
+        print("tower details:")
+        print(scale.__dict__)
         input("Press enter to start the game")
         clear_screen()
         
@@ -63,7 +65,7 @@ def main():
                     print (game.current_player().status())
 
                     while scale.paused():
-                        pass
+                        print(scale.__dict__['pause'],scale.current_weight(),scale.status())
 
                     game.current_player().start_turn()
                     sound.start_turn()

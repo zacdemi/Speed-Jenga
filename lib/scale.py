@@ -47,8 +47,8 @@ class Scale(ScaleThread):
         self.min_block_wt = (self.avg_block_wt * (1 - self.block_variance))
 
         #set scale status variables
-        self.on_max = self.tower_wt + self.avg_block_wt/10
-        self.on_min = self.tower_wt - self.avg_block_wt/10
+        self.on_max = self.tower_wt + (self.avg_block_wt * self.block_variance)
+        self.on_min = self.tower_wt - (self.avg_block_wt * self.block_variance)
 
         self.off_max = self.tower_wt - self.min_block_wt
         self.off_min = self.tower_wt - self.max_block_wt

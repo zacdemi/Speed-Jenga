@@ -16,12 +16,13 @@ def graph():
     y5 = []
     y6 = []
     y7 = []
+    y8 = []
 
     axv_count = 0
     start = time.time()
     base = scale.tower_wt - scale.min_block_wt * 4
     start_time = time.time()
-    input("Press enter to start graphing")
+    input("Press enter to start graphing. Press down on tower lightly to end analysis.")
     print (base)
 
     while True:
@@ -35,6 +36,7 @@ def graph():
         y5.append(scale.on_min)
         y6.append(scale.on_max)
         y7.append(scale.std_trigger + base)
+        y8.append(scale.pause)
  
         if scale.off() and axv_count == 0:
             x_vert.append(time.time() -start_time)
@@ -46,17 +48,18 @@ def graph():
         if scale.on():
             axv_count = 0
 
-        if scale.paused() or scale.current_weight() > 2:
+        if scale.current_weight() > 2:
             break
 
     #plot everything
-    plt.plot(x,y7,label='std trigger',color='black')
-    plt.plot(x,y1,label='current weight',color='blue',alpha=.6)
-    plt.plot(x,y2,label='off range',color='yellow',alpha=0.2)
-    plt.plot(x,y5,label='on range',color='grey',alpha=0.2)
-    plt.plot(x,y4,label='tower std + 1.68',color='red',alpha=.6)
-    plt.plot(x,y3,color='yellow',alpha=0.2)
-    plt.plot(x,y6,color='grey',alpha=0.2)
+    plt.plot(x,y7,label='std trigger', color='black')
+    plt.plot(x,y1,label='current weight', color='blue', alpha=.6)
+    plt.plot(x,y2,label='off range', color='yellow', alpha=0.2)
+    plt.plot(x,y5,label='on range', color='grey', alpha=0.2)
+    plt.plot(x,y4,label='tower std + 1.68', color='red', alpha=.6)
+    plt.plot(x,y3,color='yellow', alpha=0.2)
+    plt.plot(x,y6,color='grey', alpha=0.2)
+    plt.plot(x,y8,label='pause line', color='blue', alpha=0.2)
 
     for xc in x_vert:
         plt.axvline(x=xc, color='k', linestyle='--')
