@@ -34,6 +34,7 @@ def main():
         
         game = Game(players)
         scale = Scale()
+        countdown = False
 
         clear_screen()
         input("Press enter to start the game")
@@ -47,8 +48,13 @@ def main():
             
             while (scale.on() or scale.paused()) and not game.current_player().out_of_time():
                 print (game.current_player().status(), end="\r")
+
+                if game.current_player().current_time() <= 10 and not countdown:
+                    sound.warning()
+                    countdown = True
          
                 if scale.paused() and not game.current_player().out_of_pause_blocks():
+                    sound.stop_all()
                     game.current_player().pause_turn()
                     sound.pause_turn()
 
@@ -63,7 +69,9 @@ def main():
                     sound.start_turn()
                     clear_screen()
      
+            sound.stop_all()
             game.current_player().end_turn()
+            countdown = False
             clear_screen()
 
             #check if player is out of the game
