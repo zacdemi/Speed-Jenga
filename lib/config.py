@@ -6,4 +6,4 @@ PAUSE_BLOCKS = 1
 SERIAL_PORT = '/dev/tty.usbserial-DN03EN9E'
 TEST_MODE = True
 
-
+#ls /dev/tty.* to find serial port
