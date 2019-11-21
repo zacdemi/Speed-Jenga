@@ -65,7 +65,7 @@ def main():
                     print (game.current_player().status())
 
                     while scale.paused():
-                        print(scale.__dict__['pause'],scale.current_weight(),scale.status())
+                        pass
 
                     game.current_player().start_turn()
                     sound.start_turn()
