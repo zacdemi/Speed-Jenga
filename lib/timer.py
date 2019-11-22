@@ -14,7 +14,7 @@ class Timer():
 
     def pause(self):
         if self.active:
-            self._seconds = max(0,self._seconds - self._elapsed())
+            self._seconds = self._seconds - self._elapsed()
         self.active = False
 
     def add_seconds(self,seconds):
@@ -22,7 +22,7 @@ class Timer():
     
     def get_seconds(self):
         if self.active:
-            self._seconds = max(0,self._seconds - self._elapsed())
+            self._seconds = self._seconds - self._elapsed()
         return round(self._seconds,2)
 
     def _elapsed(self):

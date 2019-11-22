@@ -1,6 +1,6 @@
 from time import time, sleep
 from .timer import Timer
-from .config import PAUSE_BLOCKS, BONUS_SECONDS
+from .config import PAUSE_BLOCKS, BONUS_SECONDS, GAME_MODE
 
 class Player():
 
@@ -40,7 +40,7 @@ class Player():
 
     def status(self): #GUI
         """ return the status of the player as a string"""
-        if self.out_of_game or self.out_of_time():
+        if self.out_of_game or self.out_of_time() and GAME_MODE == "competitive":
             return "{name} is out of the game".format(name=self.name)
         elif self.timer.active:
             return  "{name} : {time}".format(name=self.name,time=self.timer.get_seconds())
@@ -49,7 +49,7 @@ class Player():
 
     def out_of_time(self):
         """ return True if players is out of time """
-        return self.timer.get_seconds() == 0
+        return self.timer.get_seconds() <= 0
 
     def out_of_pause_blocks(self):
         """ return True if player is out of pause blocks """

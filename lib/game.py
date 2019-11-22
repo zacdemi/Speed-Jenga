@@ -71,6 +71,14 @@ class Game(object):
         """ return True if the player index is the last player in a round """
         return self._next_player_index() < self.player_index
 
+    def sum_of_player_times(self):
+        """ return sum of all player's time """
+        times = sum([x.current_time() for k, x in self.player_objects.items()])
+        return round(times,2)
+
+    def out_of_game_seconds(self):
+        return self.sum_of_player_times() <= 0
+
     def award_fastest_move(self):
         """ increment player fastest move count """
         player_id = self._fastest_turn()[0]
@@ -165,9 +173,9 @@ class Game(object):
     def _str_moves(self):
         """ 
         string of count of moves
-        ' total moves: 12'
+        ' Total moves: 12'
         """
-        return " total moves: {} \n".format(self.moves)
+        return " Total moves: {} \n".format(self.moves)
  
     def _player_data_by_round(self, field):
         """ 
@@ -198,6 +206,7 @@ class Game(object):
             ax1.plot(rounds, times, label=name)
         ax1.set_title('Time Remaining by Round', fontsize=12)
         ax1.set_ylabel('Time Remaining')
+        ax1.axhline(linewidth=2, color='black')
         ax1.legend()
         
         for name,times in self._player_data_by_round('turn_time').items():
@@ -207,7 +216,7 @@ class Game(object):
         ax2.legend()
 
         fig.suptitle('Game Stats')
-        fig.tight_layout()
+        #fig.tight_layout()
         plt.show()
         
     @classmethod

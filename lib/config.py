@@ -5,5 +5,6 @@ BLOCK_VARIANCE = .30 # % difference of block weight from the mean +/-
 PAUSE_BLOCKS = 1
 SERIAL_PORT = '/dev/tty.usbserial-DN03EN9E'
 TEST_MODE = True
+GAME_MODE = 'Team' #'Competitive'
 
 #ls /dev/tty.* to find serial port

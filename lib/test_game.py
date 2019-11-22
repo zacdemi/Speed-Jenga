@@ -110,11 +110,21 @@ class TestGame(unittest.TestCase):
         }
         self.assertEqual(self.game_4._player_data_by_round('time_remaining'),result)
  
-    def test_graph(self):
-        for k,v in self.game_4.player_objects.items():
-            v.fastest_move_count = v.player_id
 
-        self.game_4.graph()        
+    def test_sum_of_player_times_start_of_game(self):
+        player1 = self.game_4.player_objects[0].current_time()
+        player2 = self.game_4.player_objects[1].current_time()
+        player3 = self.game_4.player_objects[2].current_time()
+        player4 = self.game_4.player_objects[3].current_time()
+
+        self.assertEqual(120,player1+player2+player3+player4,self.game_4.sum_of_player_times())
+
+   # def test_graph(self):
+   #     for k,v in self.game_4.player_objects.items():
+   #         v.fastest_move_count = v.player_id
+   #
+   #     self.game_4.graph()        
+
 
 if __name__ == "__main__":
     unittest.main()
