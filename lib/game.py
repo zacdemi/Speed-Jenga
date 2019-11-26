@@ -207,7 +207,6 @@ class Game(object):
         ax2.legend()
 
         fig.suptitle('Game Stats')
-        fig.tight_layout()
         plt.show()
         
     @classmethod
