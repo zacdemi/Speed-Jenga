@@ -91,7 +91,7 @@ class Game(object):
         list_of_times =  [(k,v.turn_time()) for k,v in self.player_objects.items() if not v.out_of_game]
         return  min(list_of_times, key=lambda x: x[1])
 
-    def save_round(self):
+    def save_data(self):
         """ add player data to data.round_index """
         rnd = []
   
@@ -110,7 +110,7 @@ class Game(object):
 
     def _initialize_data(self):
         """ save round zero to game data """
-        self.save_round()
+        self.save_data()
 
     def finalize_last_round_of_game(self):
         """ update last round to reflect the final player out_of_game status """
@@ -129,7 +129,7 @@ class Game(object):
     def end_round(self):
         self.award_fastest_move()
         self.round_index += 1
-        self.save_round()
+        self.save_data()
 
     def end_game(self):
         if self.round_complete():
@@ -173,9 +173,9 @@ class Game(object):
     def _str_moves(self):
         """ 
         string of count of moves
-        ' Total moves: 12'
+        ' Total Moves: 12'
         """
-        return " Total moves: {} \n".format(self.moves)
+        return " Total Moves: {} \n".format(self.moves)
  
     def _player_data_by_round(self, field):
         """ 

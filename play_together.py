@@ -59,8 +59,8 @@ def main():
                     clear_screen()
                     print(game._str_moves())
                     print ('Time Remaining',game.sum_of_player_times())
-                    print (game.current_player().status())
-
+                    print (f'{game.current_player().name} has paused the game')
+                    
                     while scale.paused():
                         pass
 
@@ -70,6 +70,7 @@ def main():
      
             sound.stop_all()
             game.current_player().end_turn()
+            game.save_data()
             countdown = False
             clear_screen()
             sound.end_turn()
@@ -84,7 +85,6 @@ def main():
 
             #display game info
             print ('Time Remaining',game.sum_of_player_times())
-            print (game.current_player().status())
             print (f'Next player: {game.next_player_name()}')
 
             #prompt user for next turn
@@ -108,6 +108,7 @@ def main():
                     game.moves += 1
 
             game.move_to_next_player()
+            game.save_data()
             clear_screen()
 
         scale.stop()

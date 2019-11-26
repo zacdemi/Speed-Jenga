@@ -40,7 +40,7 @@ class Player():
 
     def status(self): #GUI
         """ return the status of the player as a string"""
-        if self.out_of_game or self.out_of_time() and GAME_MODE == "competitive":
+        if self.out_of_game or self.out_of_time():
             return "{name} is out of the game".format(name=self.name)
         elif self.timer.active:
             return  "{name} : {time}".format(name=self.name,time=self.timer.get_seconds())

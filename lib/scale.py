@@ -61,7 +61,8 @@ class Scale(ScaleThread):
 
     def tare(self):
         #tare scale
-        input("remove all items from the scale and press enter when chip flashes blue...")
+        time.sleep(2) # wait for scale to engage (blue flashing light)
+        input("remove all items from the scale and press enter")
         print ("taring scale")
         self.ser.write(b'x')
         time.sleep(1)
