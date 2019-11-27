@@ -1,6 +1,6 @@
 from time import time, sleep
 from .timer import Timer
-from .config import PAUSE_BLOCKS, BONUS_SECONDS, GAME_MODE
+from .config import PAUSE_BLOCKS, BONUS_SECONDS
 
 class Player():
 

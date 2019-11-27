@@ -80,7 +80,7 @@ def main():
                 break 
 
             #check if end of round
-            if game.round_complete():
+            if game.round_complete() or len(players) == 1:
                 game.end_round()
 
             #display game info
