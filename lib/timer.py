@@ -29,9 +29,3 @@ class Timer():
         elapsed = time.time() - self.start_time
         self.start_time = time.time()
         return elapsed
- 
-def main():
-    pass     
-
-if __name__ == "__main__":
-    main()

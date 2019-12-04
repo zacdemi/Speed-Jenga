@@ -1,10 +1,12 @@
 import serial
 import numpy as np
 import time
-from matplotlib import pyplot as plt
-from .config import TOTAL_BLOCKS, BLOCK_VARIANCE, SERIAL_PORT
 import threading
 import os
+
+from serial.tools import list_ports
+from matplotlib import pyplot as plt
+from .config import TOTAL_BLOCKS, BLOCK_VARIANCE
 
 class ScaleThread(object):
     def __init__(self):
@@ -13,9 +15,10 @@ class ScaleThread(object):
 
         #to receive direct serial data
         self.buffer = ''
+        self.baudrate = 115200
   
     def start(self):
-        with serial.Serial(SERIAL_PORT,115200) as self.ser:
+        with serial.Serial(self.serial_port(),self.baudrate) as self.ser:
             while self.alive:
                 data = self.ser.read(self.ser.inWaiting())
                 if data:
@@ -23,6 +26,20 @@ class ScaleThread(object):
 
     def stop(self):
         self.alive = False
+
+    def serial_port(self):
+        """ find serial port on windows or mac """
+
+        if os.name == 'nt':
+            serial_port = 'COM5' #tbd
+        else:
+            serial_port = 'usbserial'
+
+        for s in list_ports.comports():
+            if serial_port in s.device:
+                return s.device
+        return 'serial port not found'
+
 
 class Scale(ScaleThread):
     def __init__(self):
