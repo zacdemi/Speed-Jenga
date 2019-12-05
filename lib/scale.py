@@ -16,9 +16,10 @@ class ScaleThread(object):
         #to receive direct serial data
         self.buffer = ''
         self.baudrate = 115200
+        self.serial_port = self.serial_port()
   
     def start(self):
-        with serial.Serial(self.serial_port(),self.baudrate) as self.ser:
+        with serial.Serial(self.serial_port,self.baudrate) as self.ser:
             while self.alive:
                 data = self.ser.read(self.ser.inWaiting())
                 if data:
@@ -38,7 +39,9 @@ class ScaleThread(object):
         for s in list_ports.comports():
             if serial_port in s.device:
                 return s.device
-        return 'serial port not found'
+
+        raise ValueError("Could not find serial port. Check connection") 
+        
 
 
 class Scale(ScaleThread):
