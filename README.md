@@ -1,4 +1,4 @@
-# ScaleJenga
+# SpeedJenga
 
 A fast-paced Jenga experience. 
 
