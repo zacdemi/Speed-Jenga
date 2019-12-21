@@ -18,7 +18,7 @@ def player_names(n):
     return player_names
 
 def main():
-    print ("Welcome to ScaleJenga!")
+    print ("Welcome to SpeedJenga!")
 
     #init sounds
     sound = Sounds()
