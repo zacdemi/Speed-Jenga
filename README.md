@@ -1,4 +1,4 @@
-# SpeedJenga
+# Speed Jenga
 
 A fast-paced Jenga experience. 
 
