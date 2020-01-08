@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
+import threading
+import json
+import time
+import pprint
+
 from lib.game import Game
 from lib.scale import Scale
 from lib.config import TEST_MODE
 from lib.term_controls import clear_screen
 from lib.sounds import Sounds
-import threading
-import json
-import time
-import pprint
 
 def player_names(n):
     """ prompt the users for a list of player names """
@@ -35,10 +36,9 @@ def main():
         game = Game(players)
         scale = Scale()
         countdown = False
+        paused = False
 
         clear_screen()
-        print("tower details:")
-        print(scale.__dict__)
         input("Press enter to start the game")
         clear_screen()
         
@@ -55,7 +55,9 @@ def main():
                     sound.warning()
                     countdown = True
          
+                #pause block logic
                 if scale.paused() and not game.current_player().out_of_pause_blocks():
+                    paused = True
                     sound.stop_all()
                     game.current_player().pause_turn()
                     sound.pause_turn()
@@ -67,21 +69,12 @@ def main():
                     while scale.paused():
                         pass
 
-                    game.current_player().start_turn()
-                    sound.start_turn()
-                    clear_screen()
+                    break
      
             sound.stop_all()
             game.current_player().end_turn()
             countdown = False
             clear_screen()
-
-            #check if player is out of the game
-            if game.current_player().out_of_time() or scale.disqualified():
-                game.current_player().out_of_game = True
-                sound.out_of_game()
-            else:
-                sound.end_turn()
 
             #check if game is over
             if game.one_player_remains() or scale.collapsed():
@@ -89,6 +82,13 @@ def main():
                     game.current_player().out_of_game = True
                     game.current_player().knock_over_tower = True
                 break 
+
+            #check if player is out of the game
+            if game.current_player().out_of_time() or scale.disqualified() and not paused:
+                game.current_player().out_of_game = True
+                sound.out_of_game()
+            else:
+                sound.end_turn()
 
             #check if end of round
             if game.round_complete():
@@ -100,9 +100,15 @@ def main():
             print (f"next player: {game.next_player_name()} ({game.next_player_current_time()})")
 
             #prompt user for next turn
-            if scale.on():
+            if scale.on() and not paused:
                 input("Press enter to start next turn")
             else:
+
+                if paused:
+                    print('Please remove pause block')
+                    while scale.on():
+                        pass
+
                 print ("waiting for tower to be restored...")
 
                 while scale.off() or scale.disqualified():
@@ -121,6 +127,7 @@ def main():
                     print ("success!")
                     game.moves += 1
 
+            paused = False
             game.move_to_next_player()
             clear_screen()
 
